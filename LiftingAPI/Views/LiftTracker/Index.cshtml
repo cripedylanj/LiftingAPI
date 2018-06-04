@@ -1,0 +1,54 @@
+﻿<h1 class="text-center display-3"> All Lifts </h1>
+<table class="pure-table table-bordered table-hover container-fluid text-center">
+    <thead class="text-center">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Difficulty</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    @{ int i = 1;
+    }
+    @foreach (var lift in Model)
+    {
+    <tr style="font-size: 20px; height: 100px" class="pure-table-striped">
+        <td>@i</td>
+        <td>@lift.Name</td>
+        <td>@lift.TypeOfLift</td>
+        <td>@lift.Difficulty</td>
+        <td width="15%">
+            <a class="pure-button" asp-action="LiftDetails"
+               asp-route-id="@lift.Id">Details</a>
+            <a id="deleteButton" class="pure-button" asp-action="Delete" asp-route-id="@lift.Id">Delete</a>
+        </td>
+    </tr>
+        i++;
+    }
+</table>
+<div class="pure-button-group row justify-content-center" role="group">
+    <a class="pure-button" asp-action="CreateLift">Add New Lift</a>
+    <a class="pure-button" asp-controller="Home" asp-action="Index">Lift Home</a>
+</div>
+<script>
+    $('th').click(function () {
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    })
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        }
+    }
+    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+</script>
+<script type="text/javascript">
+    $('#deleteButton').click(function () {
+        return window.confirm("Are you sure?");
+    });
+</script>

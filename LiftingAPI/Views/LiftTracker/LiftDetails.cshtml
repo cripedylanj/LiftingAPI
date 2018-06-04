@@ -1,0 +1,114 @@
+﻿@model Lift
+@{
+    ViewData["Title"] = "LiftDetails";
+}
+<h1 class="text-center display-3"> Lift Details </h1>
+
+<table class="pure-table table-bordered table-hover container-fluid text-center">
+    <thead class="text-center">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Difficulty</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tr style="font-size: 20px; height: 100px" class="pure-table-striped">
+        <td>@Model.Name</td>
+        <td>@Model.TypeOfLift</td>
+        <td>@Model.Difficulty</td>
+        <td width="20%">
+            <a class="pure-button" asp-action="EditLift"
+               asp-route-id="@Model.Id">Edit</a>
+            <a class="pure-button" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        </td>
+    </tr>
+</table>
+<div class="row justify-content-center" style="width: 100%">
+    <div style="width: 100%" class="row justify-content-center">
+        <div class="row justify-content-center">
+            @{ int i = 1;}
+            @{ if (Model.WeeklySets.Length != 0)
+                {
+                    foreach (var WeeklySet in Model.WeeklySets)
+                    {
+                        <table class="pure-table table-bordered table-hover text-center">
+                            <caption style="font-size: 20px">Week @i</caption>
+                            <thead class="text-center">
+                                <tr>
+                                    <th>Reps</th>
+                                    <th>Weight</th>
+                                </tr>
+                            </thead>
+                            @{ int j = 0;}
+                            @foreach (var reps in Model.WeeklySets[i - 1].Reps)
+                            {
+
+                                <tr>
+                                    <td>@reps</td>
+                                    <td>@Model.WeeklySets[i - 1].Weight[j]</td>
+                                </tr>
+                                j++;
+                            }
+                            <a title="Delete a week" style="height: 42px" class="pure-button"
+                               asp-action="DeleteWeek" asp-route-week="@i" asp-route-id="@Model.Id">-</a>
+                        </table>
+                        i++;
+                    }
+                    <a title="Add a new week" style="height: 42px" class="pure-button"
+                       asp-action="CreateNewWeek" asp-route-id="@Model.Id">+</a>
+                    <div id="curve_chart" style="width: 800px; height: 500px"></div>
+                }
+                else
+                {
+                    <a class="pure-button row justify-content-center" asp-action="CreateNewWeek"
+                       asp-route-id="@Model.Id">Create New Week</a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="Index" asp-controller="LiftTracker">Home</a>
+</div>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Week');
+        data.addColumn('number', 'Total Weight');
+        jQuery.ajax({
+            url: '/api/lifts/' + '@Model.Id',
+            type: 'GET',
+            datatype: 'json',
+            cache: false,
+            async: false,
+            success: function (json) {
+                var totatweight = 0;
+                var i = 1;
+                for (var set in json.weeklysets) {
+                    totalweight = 0;
+                    for (var rep in json.weeklysets[set].reps) {
+                        totalweight += parseFloat(json.weeklysets[set].reps[rep]) *
+                            parseFloat(json.weeklysets[set].weight[rep]);
+                    }
+                    data.addRow(["Week " + i++, totalweight])
+                }
+            }
+        });
+
+        var options = {
+            title: 'Total Weight by Week for @Model.Name',
+            curveType: 'function',
+            chartArea: { 'width': '85%', 'height': '85%' },
+            legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+    }
+</script>

@@ -1,0 +1,57 @@
+﻿@model LifterModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="text-center display-3">Create</h1>
+<div class="row justify-content-center">
+    <form class="pure-form pure-form-stacked" method="post">
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" placeholder="Name" required />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <label asp-for="Gender"></label>
+            <select class="pure-input-1" asp-for="Gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>\
+            </select>
+            <span asp-validation-for="Gender"></span>
+        </div>
+        <div>
+            <label asp-for="Age"></label>
+            <input asp-for="Age" placeholder="Age" required />
+            <span asp-validation-for="Age"></span>
+        </div>
+        <div>
+            <label asp-for="Weight"></label>
+            <input asp-for="Weight" placeholder="Weight" required />
+            <span asp-validation-for="Weight"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Squat"></label>
+            <input asp-for="LiftingNumbers.Squat" placeholder="Squat" required />
+            <span asp-validation-for="LiftingNumbers.Squat"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Bench"></label>
+            <input asp-for="LiftingNumbers.Bench" placeholder="Bench" required />
+            <span asp-validation-for="LiftingNumbers.Bench"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Deadlift"></label>
+            <input asp-for="LiftingNumbers.Deadlift" placeholder="Deadlift" required />
+            <span asp-validation-for="LiftingNumbers.Deadlift"></span>
+        </div>
+        <input type="submit" name="save" value="Save" />
+    </form>
+</div>
+
+<script>
+    $("input").prop('required', true);
+</script>
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="Index" asp-controller="Home">Home</a>
+</div>

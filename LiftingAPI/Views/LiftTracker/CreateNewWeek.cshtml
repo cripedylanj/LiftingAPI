@@ -1,0 +1,56 @@
+﻿@model Lift
+
+<h1 class="text-center display-3"> Create New Week </h1>
+
+<div class="row justify-content-center">
+    <form id="myForm" class="pure-form">
+        <ul id="fieldList">
+            <div>
+                <label>Reps</label>
+                <input name="reps" type="text" placeholder="Reps" required />
+                <label>Weight</label>
+                <input name="weight" type="text" placeholder="Weight" required />
+            </div>
+        </ul>
+        <button id="addMore">Add More Fields</button>
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="LiftDetails"
+       asp-route-id="@Model.Id">Back</a>
+    <a class="pure-button" asp-action="Index" asp-controller="LiftTracker">Home</a>
+</div>
+<script>
+    $(function () {
+        $("#addMore").on("click", function (e) {
+            e.preventDefault();
+            $("#fieldList").append("<div>\n");
+            $("#fieldList").append("<label>Reps</label>\n");
+            $("#fieldList").append("<input name='reps' type='text' placeholder='Reps' required/>\n");
+            $("#fieldList").append("<label>Weight</label>\n");
+            $("#fieldList").append("<input name='weight' type='text' placeholder='Weight' required/>\n");
+            $("#fieldList").append("<div>");
+        });
+    });
+    $(function () {
+        $('#myForm').submit(function () {
+            var values = [];
+            $.each($('#myForm').serializeArray(), function (i, field) {
+                values[i++] = field.value;
+            });
+            jQuery.ajax({
+                url: '/LiftTracker/CreateNewWeek/' + '@Model.Id',
+                type: 'POST',
+                datatype: 'json',
+                data: { set: values },
+                cache: true,
+                async: false,
+                success: function (response) {
+                    window.location.assign(response);
+                }
+            });
+            return false;
+        });
+    });
+</script>

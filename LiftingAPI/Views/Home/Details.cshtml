@@ -1,0 +1,123 @@
+﻿@model LifterModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="text-center display-3">Details</h1>
+
+<table class="pure-table container-fluid text-center">
+    <thead class="text-center">
+        <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Weight</th>
+            <th>Squat</th>
+            <th>Bench</th>
+            <th>Deadlift</th>
+            <th style="width: 20%">Options</th>
+        </tr>
+    </thead>
+    <tr style="font-size: 20px; height: 100px" class="pure-table-striped">
+        <td>@Model.Name</td>
+        <td>@Model.Gender</td>
+        <td>@Model.Age</td>
+        <td>@Model.Weight</td>
+        <td>@Model.LiftingNumbers.Squat</td>
+        <td>@Model.LiftingNumbers.Bench</td>
+        <td>@Model.LiftingNumbers.Deadlift</td>
+        <td width="15%">
+            <a class="pure-button" asp-action="Edit" asp-route-id="@Model.Id">Edit Lifter</a>
+            <a id="deleteButton" class="pure-button" asp-action="Delete" asp-route-id="@Model.Id">Delete Lifter</a>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $('#deleteButton').click(function () {
+        if (window.confirm("Are you sure?"))
+            alert('@Model.Name has been successfully deleted');
+    });
+</script>
+<script>
+    google.charts.load('current', { packages: ['corechart', 'bar'] });
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Squat');
+        data.addColumn('number', 'Bench');
+        data.addColumn('number', 'Deadlift');
+        jQuery.ajax({
+            url: '/api/lifters',
+            type: 'GET',
+            datatype: 'json',
+            cache: false,
+            async: false,
+            success: function (json) {
+                for (var key in json) {
+                    if (json.hasOwnProperty(key)) {
+                        data.addRow([json[key].name,
+                        parseInt(json[key].liftingnumbers.squat),
+                        parseInt(json[key].liftingnumbers.bench),
+                        parseInt(json[key].liftingnumbers.deadlift)])
+                    }
+                }
+            }
+        });
+        var options = {
+            title: 'All lifter\'s numbers',
+            hAxis: {
+                title: 'Lifters'
+            },
+            vAxis: {
+                title: 'Lifting Numbers'
+            },
+            colors: ['red', 'blue', 'green']
+        };
+        var chart = new google.visualization.ColumnChart(
+            document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+</script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Lift')
+        data.addColumn('number', 'Lbs');
+
+        jQuery.ajax({
+            url: '/api/lifters/@Model.Id',
+            type: 'GET',
+            datatype: 'json',
+            cache: false,
+            async: false,
+            success: function (json) {
+                data.addRow(["Squat", parseInt(json.liftingnumbers.squat)])
+                data.addRow(["Bench", parseInt(json.liftingnumbers.bench)])
+                data.addRow(["Deadlift", parseInt(json.liftingnumbers.deadlift)]);
+            }
+        });
+        var options = {
+            title: '@Model.Name' + '\'s Numbers',
+            pieHole: 0.4,
+            colors: ['red', 'blue', 'green']
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+    }
+</script>
+<div class="row justify-content-center">
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+</div>
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="Index" asp-controller="Home">Home</a>
+</div>

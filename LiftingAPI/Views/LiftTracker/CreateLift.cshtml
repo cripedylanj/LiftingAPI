@@ -1,0 +1,33 @@
+﻿@model Lift
+@{
+    ViewData["Title"] = "CreateLift";
+}
+
+<h1 class="text-center display-3"> Create/Edit Lift </h1>
+<div class="row justify-content-center">
+    <form class="pure-form pure-form-stacked" method="post">
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" placeholder="Name" required />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <label asp-for="TypeOfLift">Type Of Lift</label>
+            <input asp-for="TypeOfLift" placeholder="Type Of Lift" required />
+            <span asp-validation-for="TypeOfLift"></span>
+        </div>
+        <div>
+            <label asp-for="Difficulty"></label>
+            <input asp-for="Difficulty" placeholder="Difficulty" required />
+            <span asp-validation-for="Difficulty"></span>
+        </div>
+        <input type="submit" name="save" value="Save" />
+    </form>
+</div>
+
+<script>
+    $("input").prop('required', true);
+</script>
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="Index" asp-controller="LiftTracker">Home</a>
+</div>

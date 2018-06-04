@@ -1,0 +1,49 @@
+﻿@model LifterModel
+
+@{
+    ViewData["Title"] = "WilksCalculator";
+}
+
+<h1 class="text-center display-3">Wilks Calculator</h1>
+
+<div class="row justify-content-center">
+    <form class="pure-form pure-form-stacked">
+        <div>
+            <label asp-for="Gender"></label>
+            <select id="gender" class="pure-input-1" asp-for="Gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>\
+            </select>
+            <span asp-validation-for="Gender"></span>
+        </div>
+        <div>
+            <label asp-for="Weight"></label>
+            <input id="weight" asp-for="Weight" placeholder="Weight" />
+            <span asp-validation-for="Weight"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Squat"></label>
+            <input id="squat" asp-for="LiftingNumbers.Squat" placeholder="Squat" />
+            <span asp-validation-for="LiftingNumbers.Squat"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Bench"></label>
+            <input id="bench" asp-for="LiftingNumbers.Bench" placeholder="Bench" />
+            <span asp-validation-for="LiftingNumbers.Bench"></span>
+        </div>
+        <div>
+            <label asp-for="LiftingNumbers.Deadlift"></label>
+            <input id="deadlift" asp-for="LiftingNumbers.Deadlift" placeholder="Deadlift" />
+            <span asp-validation-for="LiftingNumbers.Deadlift"></span>
+        </div>
+        <a class="pure-button" onclick="Calculate()">Calculate</a>
+    </form>
+</div>
+<script>
+    function Calculate() {
+        alert("This isn't working rn.")
+    }
+</script>
+<div class="row justify-content-center">
+    <a class="pure-button" asp-action="Index" asp-controller="Home">Home</a>
+</div>
